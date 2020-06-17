@@ -4,7 +4,6 @@ import sys
 
 LARGE_FONT = ("Verdana", 12)
 
-port = 12345
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -46,7 +45,7 @@ class MainMenu(tk.Frame):
         self.baymaxIpEntry = tk.Entry(self)
         self.baymaxIpEntry.grid(row=1, column=1)
 
-        baymaxPortlabel = tk.Label(self, text="Baymax IP", font=LARGE_FONT)
+        baymaxPortlabel = tk.Label(self, text="Baymax Port", font=LARGE_FONT)
         baymaxPortlabel.grid(row=1, column=2)
         self.baymaxPortEntry = tk.Entry(self)
         self.baymaxPortEntry.grid(row=1, column=3)
