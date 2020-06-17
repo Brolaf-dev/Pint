@@ -178,11 +178,12 @@ class showAgendaDay(object):
         self.showDayEvents(self.agendaDayEvents)
 
     def orderInput(self, completeBuffer, agendaDayEvents):
-        linesplit = completeBuffer.split('\n')
-        for i in linesplit:
-            temp = i.split(',', 1)[1]  # Remove irrelevent data
-            temp = temp.split(',', 1)[1]  # Remove irrelevent data
-            agendaDayEvents.append(temp.split(','))
+        if completeBuffer != '':
+            linesplit = completeBuffer.split('\n')
+            for i in linesplit:
+                temp = i.split(',', 1)[1]  # Remove irrelevent data
+                temp = temp.split(',', 1)[1]  # Remove irrelevent data
+                agendaDayEvents.append(temp.split(','))
 
     def showDayEvents(self, day):
         rowCounter = 0
