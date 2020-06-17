@@ -71,7 +71,6 @@ class MainMenu(tk.Frame):
         self.button2.config(state='active')
 
 
-
 class Agenda(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
