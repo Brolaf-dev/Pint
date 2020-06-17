@@ -2,11 +2,13 @@ import tkinter as tk
 import socket
 import sys
 
+
 LARGE_FONT = ("Verdana", 12)
+
 port = 12345
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.connect(('192.168.1.101',port))
+s.connect(('localhost',port))
 
 class GuiController(tk.Tk):
 
@@ -97,7 +99,7 @@ class Agenda(tk.Frame):
         self.w=showAgendaDay(self.master,self.selectedDay,self.getMonth(month))
         self.master.wait_window(self.w.top)
 
-    def getMonth(argument):
+    def getMonth(self,month):
         switcher = {
             "January": 1,
             "February": 2,
@@ -112,7 +114,7 @@ class Agenda(tk.Frame):
             "November": 11,
             "December": 12
         }
-        return switcher.get(argument)
+        return switcher.get(month)
 
     def refresh(self):
         for w in self.wid[:]:
@@ -121,6 +123,8 @@ class Agenda(tk.Frame):
 
 class showAgendaDay(object):
     def __init__(self,master,selectedDay,month):
+        print(str(selectedDay))
+        print(str(month))
         top=self.top=tk.Toplevel(master)
         top.grab_set()
         self.l=tk.Label(top,text="Date: "+str(selectedDay))
@@ -129,24 +133,27 @@ class showAgendaDay(object):
         self.showEvents = []
         self.addItem=tk.Button(top,text='Add Event',command=lambda d=selectedDay:self.popup(d))
         self.addItem.grid(row=0,column=3)
+        self.save=tk.Button(top,text='Save',command=lambda d=selectedDay:self.cleanup(month,d))
+        self.save.grid(row=50,columnspan=5)
+
         global s
-        s.send(bytes(str(month)+","+str(selectedDay)),"utf-8")
-        completeBuffer = []
+        msg = str(month)+","+str(selectedDay)
+        s.send(str.encode(msg,'utf-8'))
+
+        completeBuffer = ''
         while True:
             receiving_buffer = s.recv(1024)
             if not receiving_buffer: break
-            completeBuffer+= receiving_buffer
-
+            completeBuffer+= receiving_buffer.decode('utf-8')
         self.orderInput(completeBuffer,self.agendaDayEvents)
         self.showDayEvents(self.agendaDayEvents)
 
     def orderInput(self, completeBuffer, agendaDayEvents):
         linesplit = completeBuffer.split('\n')
-        numberOfLines = 0
         for i in linesplit:
-            #agendaDayEvents.append([])
-            agendaDayEvents.append[numberOfLines].append()
-            numberOfLines += 1
+            temp = i.split(',',1)[1]        #Remove irrelevent data
+            temp = temp.split(',', 1)[1]    #Remove irrelevent data
+            agendaDayEvents.append(temp.split(','))
 
     def showDayEvents(self, day):
         rowCounter = 0
@@ -180,7 +187,21 @@ class showAgendaDay(object):
             self.showEvents.remove(w)
         self.showDayEvents(self.agendaDayEvents)
 
-    def cleanup(self):
+    def rchop(self,string, ending):
+        if string.endswith(ending):
+            return string[:-len(ending)]
+        return string
+
+    def cleanup(self, month, day):
+        global s
+        msg = ''
+        for i in self.agendaDayEvents:
+            msg+= str(month) + ',' + str(day)
+            for j in i:
+                msg+=','+str(j)
+            msg+='\n'
+        msg = self.rchop(msg,'\n')
+        s.send(str.encode(msg,'utf-8'))
         self.top.destroy()
 
 
@@ -222,7 +243,6 @@ class addAgendaItem(object):
         self.b.grid(row=20,columnspan=4)
 
     def cleanup(self,agendaDayEvents):
-        global client_socket,clientaddress
         agendaEvent=[self.eventEntry.get(),str(self.hourVar.get())+" : " + str(self.minuteVar.get()),self.eventPlaceEntry.get()]
         agendaDayEvents.append(agendaEvent)
         self.top.destroy()
