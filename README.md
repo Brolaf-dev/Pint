@@ -1,11 +1,14 @@
 # Pint
-For this Pint project, Nurse Watch is built of ESP32-WROOM which has the internal built Wi-Fi and Bluetooth. The language used for this microcontroller is Micropython, it is a lean and efficient implementation of Python 3 that contains a small batch of the Python library.
+For this Pint project, Nurse Watch is built of ESP32-WROOM which has the internal built Wi-Fi and Bluetooth. The language used for this microcontroller is Arduino, it can be considered more efficient in this situation because of the support of E-ink Display.
 
 To implement the Nurse Watch, user has to follow the given step: 
- 1. Download one of those recommended application: UPycraft or Thonny.
- 2. WifiMgr.py is an extended library which was invented and developed by `randomnertutorials`. This supports your ESP32 by displaying the     options of available Wi-Fi nearby, moreover, it stores the joint Wi-Fi ssids and passwords inside file .dat in order to speed up for       the next time.
- 3. Main.py contains various functions for the ESP32-WROOM. More details, dig in the comments inside the code.
+ 1. Download one of those recommended application: Arduino IDE
+ 2. Fill in the SSID and PASSWORD for the WiFi connection:
+    `const char* ssid = " ";`
+    `const char* password =  " ";`
+ 3. You can find the port with unique type unit16_t, for this case, I recommended the value should be 8888.
+ 4. GxEPDMaster is a zip file which contains the library supporting deriving the Pin and manipulating the data to trasnfer to E-INK             display. If the given zip is not responding, please follow the link below:  https://github.com/ZinggJM/GxEPD. Then, choose option:         `ADD.zip library` inside Arduino.
  
- Importantly, user has to pay fully attention to the IP address of your connection so user can access to the web server:
- `Connected. Network config:  ('xxx.xxx.xxx.xx', '255.255.255.0', '192.168.137.1', '192.168.137.1')`
- You can find that after colon, the first address after the brackets. 
+Importantly, user has to pay fully attention to the IP address of your connection in the serrial command so user can access to the socket:
+`WiFi connected with IP: xxx.xxx.xxx.xxx` . By noticing the IP, many users connecting to the same WiFi as the Nurse Watch's can easily      establish the socket connection to send/receive data.
+
