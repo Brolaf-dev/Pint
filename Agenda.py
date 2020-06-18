@@ -1,5 +1,5 @@
 import tkinter as tk
-from Settings import LARGE_FONT,s
+from Settings import LARGE_FONT,s,HEADERSIZE
 
 
 class Agenda(tk.Frame):
@@ -98,9 +98,6 @@ class showAgendaDay(object):
         self.save = tk.Button(top, text='Save', command=lambda d=selectedDay: self.cleanup(month, d))
         self.save.grid(row=50, columnspan=5)
 
-        global s
-        HEADERSIZE=10
-
         msg = str(month) + "," + str(selectedDay)
         msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg,"utf-8")
         s.send(msg)
@@ -172,7 +169,9 @@ class showAgendaDay(object):
             msg += '\n'
 
         msg = self.rchop(msg, '\n')
-        s.send(str.encode(msg, 'utf-8'))
+        msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg, "utf-8")
+        s.send(msg)
+
         self.top.destroy()
 
 
