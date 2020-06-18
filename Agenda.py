@@ -159,7 +159,6 @@ class showAgendaDay(object):
         return string
 
     def cleanup(self, month, day):
-        global s
         msg = ''
 
         for i in self.agendaDayEvents:
