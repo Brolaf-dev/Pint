@@ -47,11 +47,17 @@ class showMedicineScheduleDay(object):
         msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg,"utf-8")
         s.send(msg)
 
+        newMsg = True
+        msglen = 0
         completeBuffer = ''
         while True:
             receiving_buffer = s.recv(1024)
-            if not receiving_buffer: break
+            if newMsg:
+                msglen = int(receiving_buffer[:HEADERSIZE])
+                newMsg = False
             completeBuffer += receiving_buffer.decode('utf-8')
+            if len(completeBuffer) - HEADERSIZE == msglen:
+                break
 
         self.orderInput(completeBuffer, self.medicineSchedule)
         self.showDayMedicine(self.medicineSchedule)
