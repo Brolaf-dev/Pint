@@ -18,13 +18,19 @@ HEADERSIZE = 10
 agendaEvent = [[],[],[],[],[],[],[],[],[],[],[],[]]
 
 def loadAgenda():
-    with open('eventStorage.txt') as file:
+    with open('eventStorage.txt', 'r') as file:
         for line in file:
             line = line.strip() #preprocess line
             month = int(line.split(',', 1)[0]) - 1 #-1 as array count starts at 0
             agendaEvent[month].append(line)
 
-
+def saveAgenda():
+    with open('eventStorage.txt', 'w') as file:
+        for a in agendaEvent:
+            for l in a:
+                file.write(l + '\n')
+    file.close()
+    
 def removeEvents(month,day):
     tempMonth = []
     for i in agendaEvent[month]:
@@ -67,7 +73,7 @@ def processMessage(c,fullmsg):
             linesplit = msg.split('\n')
             for i in linesplit:                                      
                 agendaEvent[month].append(i)
-                
+        saveAgenda()        
  
 def threaded(c):
     fullMsg = b''
