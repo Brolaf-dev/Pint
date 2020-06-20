@@ -90,7 +90,7 @@ class showAgendaDay(object):
         self.l.grid(row=0, columnspan=3)
 
         self.showEvents = []
-        self.agendaDayEvents = [["Kapper", "13:00", "Doetinchem"], ["School", "12:00", "Enschede"]]
+        self.agendaDayEvents = []
 
         self.addItem = tk.Button(top, text='Add Event', command=lambda d=selectedDay: self.popup(d))
         self.addItem.grid(row=0, column=3)
@@ -98,7 +98,7 @@ class showAgendaDay(object):
         self.save = tk.Button(top, text='Save', command=lambda d=selectedDay: self.cleanup(month, d))
         self.save.grid(row=50, columnspan=5)
 
-        msg = str(month) + "," + str(selectedDay)
+        msg = "Request," + str(month) + "," + str(selectedDay)
         msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg,"utf-8")
         s.send(msg)
 
@@ -107,17 +107,20 @@ class showAgendaDay(object):
         completeBuffer = ''
         while True:
             receiving_buffer = s.recv(1024)
+            print(receiving_buffer)
             if newMsg:
                 msglen = int(receiving_buffer[:HEADERSIZE])
                 newMsg = False
             completeBuffer += receiving_buffer.decode('utf-8')
             if len(completeBuffer) - HEADERSIZE == msglen:
+                completeBuffer = completeBuffer[HEADERSIZE:]
                 break
 
         self.orderInput(completeBuffer, self.agendaDayEvents)
         self.showDayEvents(self.agendaDayEvents)
 
     def orderInput(self, completeBuffer, agendaDayEvents):
+        print(completeBuffer)
         if completeBuffer != '':
             linesplit = completeBuffer.split('\n')
             for i in linesplit:
@@ -165,7 +168,7 @@ class showAgendaDay(object):
         return string
 
     def cleanup(self, month, day):
-        msg = ''
+        msg = 'Update,'+str(month) + ',' + str(day) + ','
 
         for i in self.agendaDayEvents:
             msg += str(month) + ',' + str(day)
