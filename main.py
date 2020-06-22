@@ -3,7 +3,7 @@ import network
 from _thread import *
 import _thread
 import os
-import machine
+import random
 from settings import rtc
 
 station = network.WLAN(network.STA_IF)
@@ -76,7 +76,20 @@ def processMessage(c,fullmsg):
             for i in linesplit:                                      
                 agendaEvent[month].append(i)
         saveAgenda()        
- 
+    elif action == 'EmergencyCall':
+
+        char = ["0644626244","0626142741","0611554488"]
+        index = len(char)
+        randomNumber = random.randint(0,index-1)
+        randomStatus = random.randint(0, 1)
+
+        print('Choose to connect number: '+ char[randomNumber])
+        if(randomStatus == 0):
+            print('Unsuccessfully connected to ' + char[randomNumber])
+        else:
+            print('Successfully connected to ' + char[randomNumber])
+
+
 def threaded(c):
     fullMsg = b''
     newMsg = True
