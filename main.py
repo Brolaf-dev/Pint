@@ -3,6 +3,8 @@ import network
 from _thread import *
 import _thread
 import os
+import machine
+from settings import rtc
 
 station = network.WLAN(network.STA_IF)
 station.active(True)
@@ -61,7 +63,7 @@ def processMessage(c,fullmsg):
         newMsg = rchop(newMsg, '\n')
         fullMsg = bytes('{:<10}'.format(str(len(newMsg))), 'utf-8') + bytes(newMsg,'utf-8')
         c.send(fullMsg)
-    elif action == 'Update':
+    elif action == 'Update': 
         temp = msg.split(',',3)
         month = int(temp[1]) - 1 #Array start at 0
         day = int(temp[2])
@@ -81,6 +83,8 @@ def threaded(c):
     msglen = 0
 
     while True:
+        print("Clock: ")
+        print(rtc.datetime())
         buf = c.recv(1024)
         if newMsg:
             msglen = int(buf[:HEADERSIZE])
@@ -96,6 +100,13 @@ def threaded(c):
 def Main():
     host = '192.168.1.100'
     port = 12345
+
+
+    from getTime import settime
+    settime()
+
+    print("Clock: ")
+    print(rtc.datetime())
     
     loadAgenda()
     
@@ -107,8 +118,7 @@ def Main():
     # put the socket into listening mode 
     s.listen(5)
     print("socket is listening")
-
-    # a forever loop until client wants to exit 
+    # a forever loop until client wants to exit
     while True:
         # establish connection with client
         c, addr = s.accept()
