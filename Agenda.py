@@ -98,7 +98,7 @@ class showAgendaDay(object):
         self.save = tk.Button(top, text='Save', command=lambda d=selectedDay: self.cleanup(month, d))
         self.save.grid(row=50, columnspan=5)
 
-        msg = "Request," + str(month) + "," + str(selectedDay)
+        msg = "Request agenda," + str(month) + "," + str(selectedDay)
         msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg,"utf-8")
         s.send(msg)
 
@@ -168,7 +168,7 @@ class showAgendaDay(object):
         return string
 
     def cleanup(self, month, day):
-        msg = 'Update,'+str(month) + ',' + str(day) + ','
+        msg = 'Update agenda,'+str(month) + ',' + str(day) + ','
 
         for i in self.agendaDayEvents:
             msg += str(month) + ',' + str(day)

@@ -22,9 +22,21 @@ class MedicineSchedule(tk.Frame):
         mainMenuButton.grid(row=15, columnspan=2)
 
     def showDay(self, event):
-        self.selectedDay = event
+        self.selectedDay = self.strToInt(event)
         self.w = showMedicineScheduleDay(self.master, self.selectedDay)
         self.master.wait_window(self.w.top)
+
+    def strToInt(self,day):
+        switcher = {
+            "Monday": 1,
+            "Tuesday": 2,
+            "Wednesday": 3,
+            "Thursday": 4,
+            "Friday": 5,
+            "Saterday": 6,
+            "Sunday": 7,
+        }
+        return switcher.get(day)
 
 class showMedicineScheduleDay(object):
     def __init__(self, master, selectedDay):
@@ -43,7 +55,7 @@ class showMedicineScheduleDay(object):
         self.save = tk.Button(top, text='Save', command=lambda d=selectedDay: self.cleanup(d))
         self.save.grid(row=50, columnspan=5)
         print(selectedDay)
-        msg = selectedDay
+        msg = "Request med," + str(selectedDay)
         msg = bytes(f'{len(msg):<{HEADERSIZE}}', "utf-8") + bytes(msg,"utf-8")
         s.send(msg)
 
@@ -57,6 +69,7 @@ class showMedicineScheduleDay(object):
                 newMsg = False
             completeBuffer += receiving_buffer.decode('utf-8')
             if len(completeBuffer) - HEADERSIZE == msglen:
+                completeBuffer = completeBuffer[HEADERSIZE:]
                 break
 
         self.orderInput(completeBuffer, self.medicineSchedule)
@@ -73,11 +86,15 @@ class showMedicineScheduleDay(object):
         rowCounter = 0
         for i in self.medicineSchedule:
             columnCounter = 0
+            itemcounter=0
             for j in i:
+                if itemcounter == 2:
+                    j = j + ":"
                 l = tk.Label(self.top, text=j)
                 self.showEvents.append(l)
                 l.grid(row=rowCounter + 2, column=columnCounter)
                 columnCounter += 1
+                itemcounter += 1
             button = tk.Button(self.top, text="Delete", command=lambda r=rowCounter: self.deleteEvent(r))
             button.grid(row=rowCounter + 2, column=columnCounter)
             self.showEvents.append(button)
@@ -87,7 +104,7 @@ class showMedicineScheduleDay(object):
         self.top.grab_release()
         self.selectedDay = day
 
-        self.w = addAgendaItem(self.selectedDay, self.medicineSchedule)
+        self.w = addMedicineItem(self.selectedDay, self.medicineSchedule)
         self.top.wait_window(self.w.top)
 
         self.top.grab_set()
@@ -101,7 +118,7 @@ class showMedicineScheduleDay(object):
         for w in self.showEvents[:]:
             w.grid_forget()
             self.showEvents.remove(w)
-        self.showMedicineScheduleDay(self.medicineSchedule)
+        self.showDayMedicine(self.medicineSchedule)
 
     def rchop(self, string, ending):
         if string.endswith(ending):
@@ -109,7 +126,7 @@ class showMedicineScheduleDay(object):
         return string
 
     def cleanup(self, day):
-        msg = ''
+        msg = 'Update med,'+ str(day) + ','
         for i in self.medicineSchedule:
             msg += str(day)
             for j in i:
@@ -122,13 +139,14 @@ class showMedicineScheduleDay(object):
 
         self.top.destroy()
 
-class addAgendaItem(object):
+class addMedicineItem(object):
     def __init__(self, selectedDay, medicineSchedule):
         self.top = tk.Toplevel()
         self.top.wm_title("Add")
         self.top.grab_set()
 
-        self.l = tk.Label(self.top, text="Adding Event on Date: " + str(selectedDay))
+        temp = self.intToStr(selectedDay)
+        self.l = tk.Label(self.top, text="Adding medicine for: " + temp)
         self.l.grid(row=0, columnspan=4)
 
         self.medicineLabel = tk.Label(self.top, text="Medicine: ")
@@ -153,18 +171,31 @@ class addAgendaItem(object):
         self.dropDownMinute = tk.OptionMenu(self.top, self.minuteVar, *self.minuteList)
         self.dropDownMinute.grid(row=2, column=3)
 
+        self.drawVar = tk.IntVar(self.top)
         self.drawList = [1, 2, 3, 4, 5, 6]
         self.drawVar.set(1)
         self.drawLabel = tk.Label(self.top, text="Draw: ")
-        self.drawPlaceLabel.grid(row=3, column=0)
+        self.drawLabel.grid(row=3, column=0)
         self.dropDownDraw = tk.OptionMenu(self.top, self.drawVar, *self.drawList)
-        self.dropDownDraw.grid(row=2, column=1)
+        self.dropDownDraw.grid(row=3, column=1)
 
-        self.b = tk.Button(self.top, text='Save', command=lambda a=medicineSchedule: self.cleanup(a))
+        self.b = tk.Button(self.top, text='Save', command=lambda a=medicineSchedule,d=selectedDay: self.cleanup(a,d))
         self.b.grid(row=20, columnspan=4)
 
-    def cleanup(self, medicineSchedule):
-        medicineAdd = [self.medicineEntry.get(), str(self.hourVar.get()) + " : " + str(self.minuteVar.get()),
+    def intToStr(self,day):
+        switcher = {
+            1: "Monday",
+            2: "Tuesday",
+            3: "Wednesday",
+            4: "Thursday",
+            5: "Friday",
+            6: "Saterday",
+            7: "Sunday",
+        }
+        return switcher.get(day)
+
+    def cleanup(self, medicineSchedule,day):
+        medicineAdd = [str(day),self.medicineEntry.get(), str(self.hourVar.get()),str(self.minuteVar.get()),
                        self.drawVar.get()]
         medicineSchedule.append(medicineAdd)
         self.top.destroy()
