@@ -5,6 +5,7 @@ import _thread
 import os
 import machine
 from settings import rtc
+from Medicine import medicineSchedule,setAlarms,waitForAlarms
 
 station = network.WLAN(network.STA_IF)
 station.active(True)
@@ -33,7 +34,7 @@ def saveAgenda():
                 file.write(l + '\n')
     file.close()
     
-def removeEvents(month,day):
+def removeAgendaEvents(month,day):
     tempMonth = []
     for i in agendaEvent[month]:
         item = i.split(',')
@@ -41,8 +42,28 @@ def removeEvents(month,day):
             tempMonth.append(i)
     agendaEvent[month] = ''
     agendaEvent[month] = tempMonth
-  
-    
+
+def loadMedicineSchedule():
+    with open('medicineStorage.txt', 'r') as file:
+        for line in file:
+            line = line.strip() #preprocess line
+            medicineSchedule.append(line)
+
+def saveMedicineSchedule():
+    with open('medicineStorage.txt', 'w') as file:
+        for a in medicineSchedule:               
+            file.write(a + '\n')    
+    file.close()
+
+def removeMedicineScheduleEvents(day):
+    templist = []
+    global medicineSchedule
+    for med in medicineSchedule:
+        medicineDay = int(med.split(',',1)[0])
+        if day == medicineDay:
+            templist.append(med)
+    medicineSchedule = templist
+            
 def rchop(string, ending):
     if string.endswith(ending):
         return string[:-len(ending)]
@@ -52,7 +73,7 @@ def processMessage(c,fullmsg):
     msg = fullmsg.decode('utf-8')
     action = msg.split(',',1)[0]
     
-    if action == 'Request':
+    if action == 'Request agenda':
         msgArray = msg.split(',')
         newMsg = ''
         month = int(msgArray[1])-1
@@ -63,20 +84,45 @@ def processMessage(c,fullmsg):
         newMsg = rchop(newMsg, '\n')
         fullMsg = bytes('{:<10}'.format(str(len(newMsg))), 'utf-8') + bytes(newMsg,'utf-8')
         c.send(fullMsg)
-    elif action == 'Update': 
+    elif action == 'Update agenda': 
         temp = msg.split(',',3)
         month = int(temp[1]) - 1 #Array start at 0
         day = int(temp[2])
         msg = temp[3]
         
-        removeEvents(month,day)
+        removeAgendaEvents(month,day)
         
         if msg != '':
             linesplit = msg.split('\n')
             for i in linesplit:                                      
                 agendaEvent[month].append(i)
-        saveAgenda()        
- 
+        saveAgenda()
+    #MedicineSchedule    
+    elif action == 'Request med':
+        msgArray = msg.split(',')
+        newMsg = ''
+        day = int(msgArray[1])
+        for i in medicineSchedule:
+            temp = i.split(',')
+            if int(temp[0]) == int(msgArray[1]):
+                newMsg += i + '\n'
+        newMsg = rchop(newMsg, '\n')
+        fullMsg = bytes('{:<10}'.format(str(len(newMsg))), 'utf-8') + bytes(newMsg,'utf-8')
+        c.send(fullMsg)
+
+    elif action == 'Update med':
+        temp = msg.split(',',2)
+        day = int(temp[1])
+        msg = temp[2]
+        
+        removeMedicineScheduleEvents(day)
+        
+        if msg != '':
+            linesplit = msg.split('\n')
+            for i in linesplit:
+                medicineSchedule.append(i)
+        saveMedicineSchedule()
+
 def threaded(c):
     fullMsg = b''
     newMsg = True
@@ -98,8 +144,11 @@ def threaded(c):
             fullMsg = b''
 
 def Main():
+    s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     host = '192.168.1.100'
-    port = 12345
+    port = 54321
 
 
     from getTime import settime
@@ -109,12 +158,13 @@ def Main():
     print(rtc.datetime())
     
     loadAgenda()
-    
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    loadMedicineSchedule()
+    setAlarms()
     s.bind((host, port))
+    start_new_thread(waitForAlarms,())
+
     print("socket binded to ip", host)
     print("socket binded to port", port)
-
     # put the socket into listening mode 
     s.listen(5)
     print("socket is listening")

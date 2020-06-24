@@ -40,4 +40,4 @@ def settime():
     from settings import rtc
     import utime
     tm = utime.localtime(t1)
-    rtc.datetime((tm[0], tm[1], tm[2], tm[6], tm[3], tm[4], tm[5], 0))
+    rtc.datetime((tm[0], tm[1], tm[2], tm[6] + 1, tm[3], tm[4], tm[5], 0))
