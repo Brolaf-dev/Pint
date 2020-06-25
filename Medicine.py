@@ -1,10 +1,12 @@
-from settings import rtc, servoOpen,ServoClosed
-import pyb
+from settings import rtc, servoOpen,servoClosed
+import machine
+from servo import Servo
+from time import sleep
 
 medicineSchedule = []
 alarmId = []
-turnTableServo = pyb.Servo(1)
-lidServo = pyb.Servo(2)
+turnTableServo = Servo(machine.Pin(4))
+lidServo = Servo(machine.Pin(5))
 
 def setTimeToSec(medicineAlarm):
     med = medicineAlarm.split(',')
@@ -27,14 +29,11 @@ def checkAlarm(i):
         return False
     
 def openMedDraw(number):
-    #check lid closed
-    if lidServo.angle() == servoOpen:
-        lidServo.angle(servoClosed)   
+    lidServo.write_angle(servoClosed)   
     servoAngle = -90 + (number*25)
-    turnTableServo.angle(servoAngle,1500)
-    while servoAngle != turnTableServo.angle():
-        pass
-    lidServo.angle(servoOpen)
+    turnTableServo.write_angle(servoAngle)
+    time.sleep(2)
+    lidServo.write_angle(servoOpen)
     
 def waitForAlarms():
     print("Wait")

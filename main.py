@@ -3,7 +3,7 @@ import network
 from _thread import *
 import _thread
 import os
-import random
+import machine
 from settings import rtc
 from Medicine import medicineSchedule,setAlarms,waitForAlarms
 
@@ -96,7 +96,6 @@ def processMessage(c,fullmsg):
             linesplit = msg.split('\n')
             for i in linesplit:                                      
                 agendaEvent[month].append(i)
-                
         saveAgenda()
     #MedicineSchedule    
     elif action == 'Request med':
@@ -122,19 +121,7 @@ def processMessage(c,fullmsg):
             linesplit = msg.split('\n')
             for i in linesplit:
                 medicineSchedule.append(i)
-        saveMedicineSchedule()  
-    elif action == 'EmergencyCall':
-
-        char = ["0644626244","0626142741","0611554488"]
-        index = len(char)
-        randomNumber = random.randint(0,index-1)
-        randomStatus = random.randint(0, 1)
-
-        print('Choose to connect number: '+ char[randomNumber])
-        if(randomStatus == 0):
-            print('Unsuccessfully connected to ' + char[randomNumber])
-        else:
-            print('Successfully connected to ' + char[randomNumber])
+        saveMedicineSchedule()
 
 def threaded(c):
     fullMsg = b''
