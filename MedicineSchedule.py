@@ -126,8 +126,9 @@ class showMedicineScheduleDay(object):
         return string
 
     def cleanup(self, day):
-        msg = 'Update med,'+ str(day)
+        msg = 'Update med,'+ str(day) + ','
         for i in self.medicineSchedule:
+            msg += str(day)
             for j in i:
                 msg += ',' + str(j)
             msg += '\n'
@@ -194,7 +195,7 @@ class addMedicineItem(object):
         return switcher.get(day)
 
     def cleanup(self, medicineSchedule,day):
-        medicineAdd = [str(day),self.medicineEntry.get(), str(self.hourVar.get()),str(self.minuteVar.get()),
+        medicineAdd = [self.medicineEntry.get(), str(self.hourVar.get()),str(self.minuteVar.get()),
                        self.drawVar.get()]
         medicineSchedule.append(medicineAdd)
         self.top.destroy()
