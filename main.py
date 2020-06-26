@@ -60,7 +60,7 @@ def removeMedicineScheduleEvents(day):
     global medicineSchedule
     for med in medicineSchedule:
         medicineDay = int(med.split(',',1)[0])
-        if day == medicineDay:
+        if day != medicineDay:
             templist.append(med)
     medicineSchedule = templist
             
