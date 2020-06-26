@@ -126,7 +126,7 @@ class showMedicineScheduleDay(object):
         return string
 
     def cleanup(self, day):
-        msg = 'Update med,'+ str(day) + ','
+        msg = 'Update med,'+ str(day)
         for i in self.medicineSchedule:
             for j in i:
                 msg += ',' + str(j)
