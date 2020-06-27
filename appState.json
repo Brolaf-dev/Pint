@@ -1,0 +1,299 @@
+{
+  "EDITOR_STATE": {
+    "allProjectFiles": {
+      "8323d0ee-90f0-4e1b-a06f-71ff862067c7": {
+        "id": "8323d0ee-90f0-4e1b-a06f-71ff862067c7",
+        "parent": null,
+        "name": "ChineseAnimal.py",
+        "type": "PYTHON_LAMBDA",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "ChineseAnimal.py",
+        "cursor": {
+          "lineNumber": 95,
+          "column": 79
+        },
+        "config": {
+          "runtime": "python3.8",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": [],
+          "name": "ChineseAnimal"
+        },
+        "triggers": [
+          {
+            "resourceName": "alexaSKd64e53c1288a4cf79d4914d4ba2eb215",
+            "config": {}
+          }
+        ],
+        "testCases": {
+          "8aed2ff0-0e06-42a2-a3d6-ccf0f454298f": {
+            "id": "8aed2ff0-0e06-42a2-a3d6-ccf0f454298f",
+            "name": "Test event",
+            "functionId": "8323d0ee-90f0-4e1b-a06f-71ff862067c7",
+            "event": "{\r\n    \"header\": {\r\n        \"payloadVersion\": \"1\",\r\n        \"namespace\": \"Control\",\r\n        \"name\": \"SwitchOnOffRequest\"\r\n    },\r\n    \"payload\": {\r\n        \"switchControlAction\": \"TURN_ON\",\r\n        \"appliance\": {\r\n            \"additionalApplianceDetails\": {\r\n                \"key2\": \"value2\",\r\n                \"key1\": \"value1\"\r\n            },\r\n            \"applianceId\": \"sampleId\"\r\n        },\r\n        \"accessToken\": \"sampleAccessToken\"\r\n    }\r\n}",
+            "eventTemplate": "alexa-smart-home-control"
+          }
+        }
+      }
+    },
+    "openFiles": [
+      "8323d0ee-90f0-4e1b-a06f-71ff862067c7"
+    ],
+    "currentFileId": "8323d0ee-90f0-4e1b-a06f-71ff862067c7",
+    "resources": {
+      "alexaSKd64e53c1288a4cf79d4914d4ba2eb215": {
+        "name": "alexaSKd64e53c1288a4cf79d4914d4ba2eb215",
+        "type": "ALEXA",
+        "config": {
+          "type": 1,
+          "verifiedID": true,
+          "skillID": "amzn1.ask.skill.d64e53c1-288a-4cf7-9d49-14d4ba2eb215",
+          "applicationID": ""
+        }
+      },
+      "ddbesp32table": {
+        "name": "ddbesp32table",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/esp32_table",
+            "name": "esp32_table",
+            "partitionKey": "chip_id",
+            "partitionKeyType": "S",
+            "hasSortKey": true,
+            "sortKey": "ts",
+            "sortKeyType": "N",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbesp32table2": {
+        "name": "ddbesp32table2",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/esp32_table_2",
+            "name": "esp32_table_2",
+            "partitionKey": "message",
+            "partitionKeyType": "S",
+            "hasSortKey": true,
+            "sortKey": "id",
+            "sortKeyType": "N",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbesptable3": {
+        "name": "ddbesptable3",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 0,
+          "table": {
+            "arn": "",
+            "name": "esp_table_3",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": true,
+            "sortKey": "number",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 0
+          }
+        }
+      },
+      "ddbeventbaymax2": {
+        "name": "ddbeventbaymax2",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/event_baymax_2",
+            "name": "event_baymax_2",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbeventbaymax3": {
+        "name": "ddbeventbaymax3",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/event_bay_max3",
+            "name": "event_bay_max3",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbmedicinebaymax": {
+        "name": "ddbmedicinebaymax",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/medicine_baymax",
+            "name": "medicine_baymax",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbmedicine": {
+        "name": "ddbmedicine",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/medicine",
+            "name": "medicine",
+            "partitionKey": "ID",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbmedicine1": {
+        "name": "ddbmedicine1",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 0,
+          "table": {
+            "arn": "",
+            "name": "medicine1",
+            "partitionKey": "ID",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 0
+          }
+        }
+      },
+      "ddbhelptable": {
+        "name": "ddbhelptable",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/help_table",
+            "name": "help_table",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      },
+      "ddbmedicinebaymax2": {
+        "name": "ddbmedicinebaymax2",
+        "type": "DynamoDB",
+        "config": {
+          "mode": 1,
+          "table": {
+            "arn": "arn:aws:dynamodb:eu-west-2:272588681797:table/medicine_baymax_2",
+            "name": "medicine_baymax_2",
+            "partitionKey": "id",
+            "partitionKeyType": "N",
+            "hasSortKey": false,
+            "sortKey": "",
+            "sortKeyType": "S",
+            "payPerRequest": true,
+            "mode": 1
+          }
+        }
+      }
+    },
+    "customTemplate": {
+      "dialect": "CloudFormation",
+      "definitions": null
+    },
+    "envVariables": [
+      {
+        "lambdaId": "all",
+        "varKey": "SIGMA_AWS_ACC_ID",
+        "varValue": null,
+        "shouldPersist": false,
+        "displayOnly": false,
+        "editable": false
+      }
+    ],
+    "packageJSON": {
+      "dependencies": {
+        "ask_sdk_core": {
+          "name": "ask_sdk_core",
+          "version": "1.13.0",
+          "dev": false,
+          "language": "python"
+        },
+        "boto3": {
+          "name": "boto3",
+          "language": "python",
+          "version": "1.12.27",
+          "dev": true,
+          "notRemovable": false
+        },
+        "time": {
+          "name": "time",
+          "version": "3.7",
+          "dev": false,
+          "language": "python"
+        },
+        "datetime ": {
+          "name": "datetime ",
+          "version": "3.2",
+          "dev": false,
+          "language": "python"
+        }
+      }
+    }
+  },
+  "PROJECT_META": {
+    "projectName": "ChineseAnimal",
+    "projectDescription": "",
+    "projectVersion": "1.0.0",
+    "projectRegion": "eu-west-2",
+    "platform": "AWS",
+    "language": "python",
+    "platformRegions": {},
+    "lastSave": 1593242985371
+  },
+  "VCS_STATE": {
+    "provider": "GitHub",
+    "repo": {
+      "name": "chineseanimal",
+      "url": "https://github.com/minhtrikieu/chineseanimal"
+    }
+  }
+}
